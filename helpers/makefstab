@@ -7,6 +7,8 @@ my @files;
 my @skip;
 my $args = "";
 my $outputdir=".";
+my $skip_system_as_root=false;
+my $legacy_vendor=false;
 while (@ARGV) {
   $_ = shift @ARGV;
   if (/^--/) {
@@ -19,6 +21,10 @@ while (@ARGV) {
     push @skip, $_;
   } elsif ($args eq "--outputdir") {
     $outputdir=$_;
+  } elsif ($args eq "--skip-system-as-root") {
+    $skip_system_as_root=$_;
+  } elsif ($args eq "--legacy-vendor") {
+    $legacy_vendor=$_;
   } else {
     print "Unrecognised args; not part of --files or --skip\n";
     exit 1;
@@ -157,10 +163,21 @@ for my $file (@files) {
 
     write_unit($outputdir, $unitname, $secontext, $mnt_flagsandoptions, $type, $src, $mnt_point, $file, $_);
 
-    # in case of an Android 8 root partition, bind mount /system_root/system
+    # In case of an Android 8 root partition, bind mount /system_root/system
     # to /system to make sure everything is in the proper place.
-    if ( $unitname eq "system_root" ) {
-      write_unit($outputdir, "system", $secontext, "bind", "none", "/system_root/system", "/system", $file, $_);
+    # TODO: Disabled on tone because there is no system-as-root needed
+    # Idea: add "--skip-system-as-root true" flag
+    #if ($skip_system_as_root eq "true") {
+    #if ( $unitname eq "system_root" ) {
+    #  write_unit($outputdir, "system", $secontext, "bind", "none", "/system_root/system", "/system", $file, $_);
+    #}
+    #}
+
+    # In case of a legacy partition layout without a dedicated /vendor partition,
+    # bind mount /system/vendor to /vendor to make sure everything is in the proper place.
+    if ($legacy_vendor eq "true") {
+      write_unit($outputdir, "systemvendorlegacy", $secontext, "bind", "none", "/system/vendor", "/vendor", $file, $_);
     }
+
   }
 }
