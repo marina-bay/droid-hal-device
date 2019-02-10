@@ -525,6 +525,9 @@ popd 1>/dev/null
 %endif
 
 # Add our config into the default android-config.h
+# TODO: Detecting device/$vendor/*/*.mk files is very unreliable as currently
+# all Sony devices are being synced, so the build variables might be set
+# because of an unused device that nonetheless is present in the android tree!
 echo Making new $HDRS/android-config.h
 sed '/CONFIG GOES HERE/,$d' $HDRS/android-config.h > $HDRS/android-config.h.new
 cat <<EOF >> $HDRS/android-config.h.new
@@ -636,6 +639,7 @@ fi
 MOD_DIR=$RPM_BUILD_ROOT/lib/modules/$KERNEL_RELEASE
 mkdir -p $MOD_DIR
 cp -a out/target/product/%{device}/system/lib/modules/. $MOD_DIR/. || true
+cp -a out/target/product/%{device}/system/vendor/lib/modules/. $MOD_DIR/. || true
 cp -a out/target/product/%{device}/vendor/lib/modules/. $MOD_DIR/. || true
 cp -a out/target/product/%{device}/obj/*/modules.builtin $MOD_DIR/. || true
 cp -a out/target/product/%{device}/obj/*/modules.order $MOD_DIR/. || true
