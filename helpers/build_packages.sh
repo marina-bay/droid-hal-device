@@ -173,7 +173,11 @@ if [ "$BUILDMW" == "1" ]; then
             sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -m sdk-install -R zypper remove bluez-configs-mer
         fi
     else
-        buildmw $BUILDMW_REPO $BUILDSPEC_FILE || die
+        if [[ -z "$BUILDSPEC_FILE" ]]; then
+            buildmw -u $BUILDMW_REPO || die
+        else
+            buildmw -u $BUILDMW_REPO -s "$BUILDSPEC_FILE" || die
+        fi
     fi
     popd > /dev/null
 fi
