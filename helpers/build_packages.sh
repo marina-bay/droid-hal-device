@@ -79,7 +79,7 @@ while true; do
           shift;;
       -s|--spec) BUILDSPEC=1
           case "$2" in
-              *) BUILDSPEC_FILE=$2;;
+              *) BUILDSPEC_FILE+="$2 ";;
           esac
           shift;;
       -v|--version) BUILDVERSION=1 ;;
