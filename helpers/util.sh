@@ -160,9 +160,9 @@ function yesnoall() {
 
 function buildmw() {
     # Usage:
-    #  -u     URL to use. If supplied with an argument that does not start with
-    #         http(s):// or git://, looks for a folder named that way in
-    #         $ANDROID_ROOT/external/*.
+    #  -u     URL to use. Will check whether a folder with the same name as the
+    #         git repo is already present in $ANDROID_ROOT/external/* and
+    #         re-use that one.
     #  -b     Branch to use. If none supplied, use default.
     #  -s     .spec file to use. Can be supplied multiple times.
     #         If empty, will use all .spec files from $PKG/rpm/*.
