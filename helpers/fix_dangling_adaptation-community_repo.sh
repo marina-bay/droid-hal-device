@@ -16,12 +16,13 @@ if [ -n "$(grep '%define community_adaptation' $ANDROID_ROOT/hybris/droid-config
         echo "adaptation-community has been found pointing to an OBS repo, let's purge it for local builds"
         sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -m sdk-install -R rpm -e --nodeps community-adaptation-devel
         BUILDALL=y
-        buildmw https://github.com/mer-hybris/community-adaptation.git rpm/community-adaptation-localbuild.spec || die
+        buildmw -u "https://github.com/mer-hybris/community-adaptation.git" -s rpm/community-adaptation-localbuild.spec || die
         BUILDALL=n
         buildconfigs
         sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -m sdk-install -R zypper --non-interactive in --force droid-config-$DEVICE
+        fi
         echo "configs rebuilt, adaptation-community has now been removed"
-    else 
+    else
         echo "adaptation-community is already nonexistent, job done here"
     fi
 fi
