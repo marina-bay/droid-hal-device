@@ -158,15 +158,29 @@ function yesnoall() {
     esac
 }
 
-function buildmw {
+function buildmw() {
+    # Usage:
+    #  -u     URL to use. If supplied with an argument that does not start with
+    #         http(s):// or git://, looks for a folder named that way in
+    #         $ANDROID_ROOT/external/*.
+    #  -b     Branch to use. If none supplied, use default.
+    #  -s     .spec file to use. Can be supplied multiple times.
+    #         If empty, will use all .spec files from $PKG/rpm/*.
 
-    GIT_URL="$1"
-    shift
-    GIT_BRANCH=""
-    if [[ "$1" != "" && "$1" != *.spec ]]; then
-        GIT_BRANCH="-b $1"
-        shift;
-    fi
+    local GIT_URL=""
+    local GIT_BRANCH=""
+    local MW_BUILDSPEC=""
+    # This is important for getopt or it will fail on the second invocation!
+    local OPTIND
+    while getopts 'u:b:s:' _flag
+    do
+        case "${_flag}" in
+            u) GIT_URL="$OPTARG" ;;
+            b) GIT_BRANCH="-b $OPTARG" ;;
+            s) MW_BUILDSPEC+="$OPTARG " ;;
+            *) echo "buildmw(): Unexpected option $_flag"; exit 1; ;;
+        esac
+    done
 
     [ -z "$GIT_URL" ] && die "Please give me the git URL (or directory name, if it's already installed)."
 
@@ -215,7 +229,7 @@ function buildmw {
             sed "s/%{?qa_stage_devel:--enable-arm-tracing}/--enable-arm-tracing/g" -i rpm/libhybris.spec
         fi
 
-        build $1
+        build $MW_BUILDSPEC
 
         deploy $PKG
 
