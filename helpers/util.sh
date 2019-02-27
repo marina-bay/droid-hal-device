@@ -229,7 +229,7 @@ function buildmw() {
             sed "s/%{?qa_stage_devel:--enable-arm-tracing}/--enable-arm-tracing/g" -i rpm/libhybris.spec
         fi
 
-        build $MW_BUILDSPEC
+        build "$MW_BUILDSPEC"
 
         deploy $PKG
 
@@ -239,7 +239,7 @@ function buildmw() {
 }
 
 function build {
-    SPECS=$1
+    SPECS=$@
     if [ -z "$SPECS" ]; then
         minfo "No spec file for package building specified, building all I can find."
         SPECS="rpm/*.spec"
