@@ -134,9 +134,9 @@ if [ "$BUILDMW" == "1" ]; then
     sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R -msdk-install zypper ref -f
 
     if [ "$FAMILY" == "" ]; then
-        sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R -msdk-install zypper -n install $ALLOW_UNSIGNED_RPM droid-hal-$DEVICE-devel
+        sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R -msdk-install zypper -n install -f $ALLOW_UNSIGNED_RPM droid-hal-$DEVICE-devel
     else
-        sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R -msdk-install zypper -n install $ALLOW_UNSIGNED_RPM droid-hal-$HABUILD_DEVICE-devel
+        sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R -msdk-install zypper -n install -f $ALLOW_UNSIGNED_RPM droid-hal-$HABUILD_DEVICE-devel
     fi
 
     android_version_major=$(sb2 -t $VENDOR-$DEVICE-$PORT_ARCH -R cat /usr/lib/droid-devel/droid-headers/android-version.h |grep "#define.*ANDROID_VERSION_MAJOR" |sed -e "s/#define.*ANDROID_VERSION_MAJOR//g")
