@@ -213,7 +213,7 @@ function buildmw() {
             initlog $PKG
 
             if [ ! -d $PKG ] ; then
-                minfo "Source code directory doesn't exist, cloning repository"
+                minfo "Source code directory doesn't exist, cloning repository: $GIT_URL $GIT_BRANCH"
                 git clone --recurse-submodules $GIT_URL $GIT_BRANCH >>$LOG 2>&1|| die "cloning of $GIT_URL failed"
             fi
 
