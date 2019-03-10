@@ -18,9 +18,8 @@ mkdir -p $fold/external/audioflingerglue
 
 cp ./external/audioflingerglue/*.h $fold/external/audioflingerglue/
 cp ./external/audioflingerglue/hybris.c.in $fold/external/audioflingerglue/
-# Remove audioflingerglue bits from out/ (otherwise it would cause a conflict within droid-hal-$DEVICE):
-mv ./out/target/product/${DEVICE}/system/${DROIDLIB}/libaudioflingerglue.so $fold/out/target/product/${DEVICE}/system/${DROIDLIB}/
-mv ./out/target/product/${DEVICE}/system/bin/miniafservice $fold/out/target/product/${DEVICE}/system/bin/
+cp ./out/target/product/${DEVICE}/system/${DROIDLIB}/libaudioflingerglue.so $fold/out/target/product/${DEVICE}/system/${DROIDLIB}/
+cp ./out/target/product/${DEVICE}/system/bin/miniafservice $fold/out/target/product/${DEVICE}/system/bin/
 
 tar -cjvf $fold.tgz -C $(dirname $fold) $pkg
 
