@@ -42,11 +42,12 @@ function usage() {
     echo "  -v, --version   build droid-hal-version"
     echo "  -b, --build=PKG build one package (PKG can include path)"
     echo "  -s, --spec=SPEC optionally used with -m or -b"
+    echo "                  can be supplied multiple times to build multiple .spec files at once"
     echo " No options assumes building for all areas."
     exit 1
 }
 
-OPTIONS=$(getopt -o hdcm::vb:s: -l help,droid-hal,configs,mw::,version,build:,spec: -- "$@")
+OPTIONS=$(getopt -o hdcm::vb:s:D -l help,droid-hal,configs,mw::,version,build:,spec:,dont-install -- "$@")
 
 if [ $? -ne 0 ]; then
     echo "getopt error"
@@ -68,6 +69,7 @@ while true; do
       -h|--help) usage ;;
       -d|--droid-hal) BUILDDHD=1 ;;
       -c|--configs) BUILDCONFIGS=1 ;;
+      -D|--dont-install) DO_NOT_INSTALL=1;;
       -m|--mw) BUILDMW=1
           case "$2" in
               *) BUILDMW_REPO=$2;;
@@ -167,7 +169,7 @@ if [ "$BUILDMW" == "1" ]; then
         buildmw -u "https://git.merproject.org/mer-core/sensorfw.git" \
                 -s rpm/sensorfw-qt5-hybris.spec || die
         if [ $android_version_major -ge 8 ]; then
-            buildmw -u "https://gitub.com/mer-hybris/geoclue-providers-hybris" \
+            buildmw -u "https://github.com/mer-hybris/geoclue-providers-hybris" \
                     -s rpm/geoclue-providers-hybris-binder.spec || die
         else
             buildmw -u "https://github.com/mer-hybris/geoclue-providers-hybris" \
@@ -202,11 +204,7 @@ if [ "$BUILDPKG" == "1" ]; then
     if [ -z $BUILDPKG_PATH ]; then
        echo "--build requires an argument (path to package)"
     else
-        if [[ -z "$BUILDSPEC_FILE" ]]; then
-            buildpkg $BUILDPKG_PATH
-        else
-            buildpkg $BUILDPKG_PATH "$BUILDSPEC_FILE"
-        fi
+        buildpkg $BUILDPKG_PATH ${BUILDSPEC_FILE[@]}
     fi
 fi
 
